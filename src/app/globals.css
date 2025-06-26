@@ -21,13 +21,13 @@ body, .font-mochiy {
 .starry-bg {
   position: fixed;
   top: 0; left: 0; width: 100vw; height: 100vh;
-  z-index: -1;
+  z-index: 0;
   pointer-events: none;
 }
 
 .star {
   position: absolute;
-  background: white;
+  background: rgb(245, 246, 225);
   border-radius: 50%;
   opacity: 0.8;
   animation: twinkle 2s infinite ease-in-out;

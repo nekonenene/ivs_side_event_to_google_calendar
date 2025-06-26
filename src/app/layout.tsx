@@ -24,7 +24,7 @@ export default function RootLayout({
       <head>
         <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+P+One&display=swap" rel="stylesheet" />
       </head>
-      <body>
+      <body style={{ position: 'relative' }}>
         {/* 星アニメーション背景 */}
         <div className="starry-bg" id="starry-bg"></div>
         {children}
