@@ -174,7 +174,6 @@ export default function EventExtractor() {
               </div>
             </div>
 
-
             <div className="pt-4 border-t border-gray-200">
               <CalendarButton
                 event={eventInfo}

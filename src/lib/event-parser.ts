@@ -17,7 +17,6 @@ export async function parseEventFromUrl(url: string): Promise<EventInfo> {
     // PuppeteerでJavaScript実行後のHTMLを取得
     const html = await fetchRenderedHTML(url)
 
-
     // JavaScript実行後のHTMLをDOM解析
     const $ = cheerio.load(html)
     const eventInfo = extractEventInfo($, url)
@@ -37,20 +36,24 @@ export async function parseEventFromUrl(url: string): Promise<EventInfo> {
 async function fetchRenderedHTML(url: string): Promise<string> {
   const browser = await puppeteer.launch({
     headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox']
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
   })
 
   try {
     const page = await browser.newPage()
 
     // ユーザーエージェントを設定
-    await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36')
+    await page.setUserAgent(
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+    )
 
     // ページに移動して、コンテンツが読み込まれるまで待機
     await page.goto(url, { waitUntil: 'networkidle0', timeout: 30000 })
 
     // イベントタイトルが表示されるまで待機
-    await page.waitForSelector('[class*="EventDetailOverviewScreen_title"]', { timeout: 10000 })
+    await page.waitForSelector('[class*="EventDetailOverviewScreen_title"]', {
+      timeout: 10000,
+    })
 
     // レンダリング後のHTMLを取得
     const html = await page.content()
@@ -60,8 +63,6 @@ async function fetchRenderedHTML(url: string): Promise<string> {
     await browser.close()
   }
 }
-
-
 
 /**
  * CheerioのロードされたHTMLからイベント情報を抽出する
@@ -142,6 +143,8 @@ function parseDateString(
 
   // 日本語の日時パターンを解析
   const patterns = [
+    // 2025年7月2日 10:00 - 2025年7月4日 17:00
+    /(\d{4})年(\d{1,2})月(\d{1,2})日\s*(\d{1,2}):(\d{2})\s*-\s*(\d{4})年(\d{1,2})月(\d{1,2})日\s*(\d{1,2}):(\d{2})/,
     // 2025年6月27日 16:00 - 17:00
     /(\d{4})年(\d{1,2})月(\d{1,2})日\s*(\d{1,2}):(\d{2})\s*-\s*(\d{1,2}):(\d{2})/,
     // 6月27日 16:00-17:00
@@ -162,6 +165,41 @@ function parseDateString(
   for (const pattern of patterns) {
     const match = dateString.match(pattern)
     if (match) {
+      if (match.length === 11) {
+        // 複数日にまたがる場合: 2025年7月2日 10:00 - 2025年7月4日 17:00
+        const [
+          ,
+          startYear,
+          startMonth,
+          startDay,
+          startHour,
+          startMinute,
+          endYear,
+          endMonth,
+          endDay,
+          endHour,
+          endMinute,
+        ] = match
+        const startDate = new Date(
+          parseInt(startYear),
+          parseInt(startMonth) - 1,
+          parseInt(startDay),
+          parseInt(startHour),
+          parseInt(startMinute)
+        )
+        const endDate = new Date(
+          parseInt(endYear),
+          parseInt(endMonth) - 1,
+          parseInt(endDay),
+          parseInt(endHour),
+          parseInt(endMinute)
+        )
+        return {
+          startDate: startDate.toISOString(),
+          endDate: endDate.toISOString(),
+        }
+      }
+
       let year, month, day, startHour, startMinute, endHour, endMinute
 
       if (match.length === 8) {
@@ -223,18 +261,108 @@ function parseEnglishDateString(
 ): { startDate: string; endDate: string } | null {
   // 月名のマッピング
   const monthNames = {
-    january: 1, february: 2, march: 3, april: 4, may: 5, june: 6,
-    july: 7, august: 8, september: 9, october: 10, november: 11, december: 12,
-    jan: 1, feb: 2, mar: 3, apr: 4, jun: 6, jul: 7,
-    aug: 8, sep: 9, oct: 10, nov: 11, dec: 12
+    january: 1,
+    february: 2,
+    march: 3,
+    april: 4,
+    may: 5,
+    june: 6,
+    july: 7,
+    august: 8,
+    september: 9,
+    october: 10,
+    november: 11,
+    december: 12,
+    jan: 1,
+    feb: 2,
+    mar: 3,
+    apr: 4,
+    jun: 6,
+    jul: 7,
+    aug: 8,
+    sep: 9,
+    oct: 10,
+    nov: 11,
+    dec: 12,
+  }
+
+  // July 2, 2025 10:00 AM - July 4, 2025 5:00 PM
+  const multiDayPattern =
+    /(\w+)\s+(\d{1,2}),\s+(\d{4})\s+(\d{1,2}):(\d{2})\s+(AM|PM)\s*-\s*(\w+)\s+(\d{1,2}),\s+(\d{4})\s+(\d{1,2}):(\d{2})\s+(AM|PM)/i
+  const multiDayMatch = dateString.match(multiDayPattern)
+
+  if (multiDayMatch) {
+    const [
+      ,
+      startMonthName,
+      startDay,
+      startYear,
+      startHour,
+      startMinute,
+      startPeriod,
+      endMonthName,
+      endDay,
+      endYear,
+      endHour,
+      endMinute,
+      endPeriod,
+    ] = multiDayMatch
+
+    const startMonth =
+      monthNames[startMonthName.toLowerCase() as keyof typeof monthNames]
+    const endMonth =
+      monthNames[endMonthName.toLowerCase() as keyof typeof monthNames]
+    if (!startMonth || !endMonth) return null
+
+    let startHour24 = parseInt(startHour)
+    if (startPeriod.toUpperCase() === 'PM' && startHour24 !== 12)
+      startHour24 += 12
+    if (startPeriod.toUpperCase() === 'AM' && startHour24 === 12)
+      startHour24 = 0
+
+    let endHour24 = parseInt(endHour)
+    if (endPeriod.toUpperCase() === 'PM' && endHour24 !== 12) endHour24 += 12
+    if (endPeriod.toUpperCase() === 'AM' && endHour24 === 12) endHour24 = 0
+
+    const startDate = new Date(
+      parseInt(startYear),
+      startMonth - 1,
+      parseInt(startDay),
+      startHour24,
+      parseInt(startMinute)
+    )
+    const endDate = new Date(
+      parseInt(endYear),
+      endMonth - 1,
+      parseInt(endDay),
+      endHour24,
+      parseInt(endMinute)
+    )
+
+    return {
+      startDate: startDate.toISOString(),
+      endDate: endDate.toISOString(),
+    }
   }
 
   // June 27, 2025 4:00 PM - 5:00 PM
-  const pattern = /(\w+)\s+(\d{1,2}),\s+(\d{4})\s+(\d{1,2}):(\d{2})\s+(AM|PM)\s*-\s*(\d{1,2}):(\d{2})\s+(AM|PM)/i
-  const match = dateString.match(pattern)
+  const singleDayPattern =
+    /(\w+)\s+(\d{1,2}),\s+(\d{4})\s+(\d{1,2}):(\d{2})\s+(AM|PM)\s*-\s*(\d{1,2}):(\d{2})\s+(AM|PM)/i
+  const singleDayMatch = dateString.match(singleDayPattern)
 
-  if (match) {
-    const [, monthName, day, year, startHour, startMinute, startPeriod, endHour, endMinute, endPeriod] = match
+  if (singleDayMatch) {
+    const [
+      ,
+      monthName,
+      day,
+      year,
+      startHour,
+      startMinute,
+      startPeriod,
+      endHour,
+      endMinute,
+      endPeriod,
+    ] = singleDayMatch
 
     const month = monthNames[monthName.toLowerCase() as keyof typeof monthNames]
     if (!month) return null
@@ -313,7 +441,7 @@ function extractDescription($: cheerio.Root, originalUrl: string): string {
  * @param element - CheerioのHTML要素
  * @returns フォーマットされた説明文
  */
-function formatDescriptionHTML(element: cheerio.Cheerio<any>): string {
+function formatDescriptionHTML(element: cheerio.Cheerio): string {
   // HTMLのコピーを作成して処理
   const tempElement = element.clone()
 
@@ -322,7 +450,7 @@ function formatDescriptionHTML(element: cheerio.Cheerio<any>): string {
 
   // 段落ごとに処理
   let formattedText = ''
-  tempElement.find('p').each((index, pElement) => {
+  tempElement.find('p').each((index: number, pElement: cheerio.Element) => {
     const paragraphText = cheerio.load(pElement)('p').text().trim()
     if (paragraphText) {
       formattedText += paragraphText + '\n\n'
