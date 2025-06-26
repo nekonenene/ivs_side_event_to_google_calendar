@@ -31,7 +31,7 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="app-bg font-mochiy" style={{ minHeight: "100vh", textAlign: "center", paddingTop: "30px" }}>
+    <main className="app-bg font-mochiy" style={{ minHeight: "100vh", textAlign: "center" }}>
       {/* お知らせスクロールボックス */}
       <div className="marquee-box">
         <span className="marquee-content">
@@ -52,6 +52,34 @@ export default function Home() {
       </div>
       <hr />
       <EventExtractor />
+      <hr />
+      <a
+        href="https://4s.link/ja/explore"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="tacky-btn"
+        style={{ display: 'block', width: '240px', textDecoration: 'none', margin: '2em auto' }}
+      >
+        サイドイベント一覧はこちら
+      </a>
+      <a
+        href="https://4s.link/ja/explore"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="tacky-btn"
+        style={{ display: 'block', width: '240px', textDecoration: 'none', margin: '2em auto' }}
+      >
+        IVS2025公式はこちら
+      </a>
+      <a
+        href="https://x.com/yokoe24"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="tacky-btn"
+        style={{ display: 'block', width: '240px', textDecoration: 'none', margin: '2em auto' }}
+      >
+        製作者のXアカウント
+      </a>
     </main>
   );
 }
