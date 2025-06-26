@@ -41,17 +41,17 @@ body, .font-mochiy {
 /* 虹色グラデーション文字 */
 .rainbow-text {
   background: linear-gradient(90deg, #ff0000, #ff9900, #ffee00, #33ff00, #00ffee, #0066ff, #cc00ff, #ff0000);
-  background-size: 200% auto;
+  background-size: 50% auto;
   color: transparent;
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: rainbow-move 3s linear infinite;
+  animation: rainbow-move 8s linear infinite;
 }
 
 @keyframes rainbow-move {
   0% { background-position: 0% 50%; }
-  100% { background-position: 100% 50%; }
+  100% { background-position: 200% 50%; }
 }
 
 /* ダサいボタン */
@@ -76,11 +76,11 @@ body, .font-mochiy {
 
 /* お知らせスクロールボックス */
 .marquee-box {
-  border: 4px solid #ff0000;
+  border: 4px solid red;
   background: #111;
   color: #fff;
   padding: 0.5em 0;
-  margin: 1.5em auto;
+  margin: 0 auto;
   width: 80vw;
   max-width: 700px;
   overflow: hidden;
@@ -105,7 +105,19 @@ body, .font-mochiy {
 }
 
 /* その他ダサい装飾 */
-h1, h2, h3 {
+h1 {
+  font-family: 'Mochiy Pop P One', sans-serif;
+  line-height: 1.5;
+  margin-bottom: 0.6em;
+}
+
+h2 {
+  font-family: 'Mochiy Pop P One', sans-serif;
+  color: aqua;
+  margin-bottom: 0.3em;
+}
+
+h3 {
   font-family: 'Mochiy Pop P One', sans-serif;
   color: #fff;
   text-shadow: 2px 2px 0 #fff, 4px 4px 0 rgb(38, 255, 0), 0 0 8px rgb(255, 254, 207);

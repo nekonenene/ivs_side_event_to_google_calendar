@@ -89,10 +89,7 @@ export default function EventExtractor() {
         width: '100%',
         minWidth: 0,
       }}>
-        <h2 style={{ fontSize: '1.6rem', marginBottom: '1em' }}>
-        4s.link  イベントURL入力
-        </h2>
-
+        <h2>4s.link  イベントURL入力</h2>
         <div className="space-y-4">
           <div>
             <input

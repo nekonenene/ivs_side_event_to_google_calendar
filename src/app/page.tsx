@@ -31,7 +31,7 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="app-bg font-mochiy" style={{ minHeight: "100vh", textAlign: "center", paddingTop: "40px" }}>
+    <main className="app-bg font-mochiy" style={{ minHeight: "100vh", textAlign: "center", paddingTop: "30px" }}>
       {/* お知らせスクロールボックス */}
       <div className="marquee-box">
         <span className="marquee-content">
@@ -44,11 +44,10 @@ export default function Home() {
       <h1 className="rainbow-text" style={{ fontSize: "2.5rem", margin: "0.5em 0" }}>
         IVSサイドイベント to Googleカレンダー
       </h1>
-      <div style={{ color: "#ff0", fontSize: "1.1rem", marginBottom: "1em", textShadow: "2px 2px 0 #000, 0 0 8px #0ff", fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Meiryo', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif", fontWeight: 700 }}>
+      <div style={{ color: "#ff0", fontSize: "1.2rem", marginBottom: "1em", textShadow: "2px 2px 0 #000, 0 0 8px #0ff", fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Meiryo', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif", fontWeight: 700 }}>
         4s.linkのイベントURLを入力して、Googleカレンダーに一発登録！
       </div>
       <div style={{ color: "#fff", fontSize: "1.1rem", maxWidth: 600, margin: "0 auto 2em", textShadow: "1px 1px 0 #000", fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Meiryo', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif", fontWeight: 700 }}>
-        URLを貼るだけで、IVSサイドイベントの予定をGoogleカレンダーに追加できます。<br />
         参加したいイベントを見逃さず、スケジュール管理もラクラク！
       </div>
       <hr />
