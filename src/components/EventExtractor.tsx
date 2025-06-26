@@ -124,7 +124,7 @@ export default function EventExtractor() {
                 className="tacky-btn"
                 style={{ width: '100%', flex: 1, minWidth: 0 }}
               >
-                {loadingState === 'loading' ? '解析中...' : 'イベントURLを入力する'}
+                {loadingState === 'loading' ? '解析中...' : 'イベント情報を取得する'}
               </button>
             )}
 
@@ -162,8 +162,9 @@ export default function EventExtractor() {
           border: '4px solid #0ff',
           borderRadius: '18px',
           boxShadow: '0 0 16px #0ff, 0 0 4px #00f',
-          marginBottom: '1.5em',
+          margin: '0 auto 1.5em',
           padding: '2em 1.5em',
+          maxWidth: '800px',
           textAlign: 'center',
         }}>
           <LoadingSpinner />

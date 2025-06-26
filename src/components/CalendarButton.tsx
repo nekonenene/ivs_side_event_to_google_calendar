@@ -47,9 +47,9 @@ export default function CalendarButton({
       onClick={handleAddToCalendar}
       className="win98-btn"
       type="button"
-      style={{ width: '100%' }}
+      style={{ width: '100%', zIndex: 1000 }}
     >
-      📅 Googleカレンダーに追加
+      📅 Googleカレンダーに登録
     </button>
   )
 }
