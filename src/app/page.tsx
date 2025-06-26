@@ -58,7 +58,7 @@ export default function Home() {
         target="_blank"
         rel="noopener noreferrer"
         className="tacky-btn"
-        style={{ display: 'block', width: '240px', textDecoration: 'none', margin: '2em auto' }}
+        style={{ display: 'block', width: '100%', maxWidth: '320px', minWidth: 0, textDecoration: 'none', margin: '2em auto' }}
       >
         サイドイベント一覧はこちら
       </a>
@@ -67,7 +67,7 @@ export default function Home() {
         target="_blank"
         rel="noopener noreferrer"
         className="tacky-btn"
-        style={{ display: 'block', width: '240px', textDecoration: 'none', margin: '2em auto' }}
+        style={{ display: 'block', width: '100%', maxWidth: '320px', minWidth: 0, textDecoration: 'none', margin: '2em auto' }}
       >
         IVS2025公式はこちら
       </a>
@@ -76,7 +76,7 @@ export default function Home() {
         target="_blank"
         rel="noopener noreferrer"
         className="tacky-btn"
-        style={{ display: 'block', width: '240px', textDecoration: 'none', margin: '2em auto' }}
+        style={{ display: 'block', width: '100%', maxWidth: '320px', minWidth: 0, textDecoration: 'none', margin: '2em auto' }}
       >
         製作者のXアカウント
       </a>

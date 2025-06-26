@@ -195,8 +195,9 @@ export default function EventExtractor() {
           border: '4px solid #0f0',
           borderRadius: '18px',
           boxShadow: '0 0 16px #0f0, 0 0 4px #080',
-          marginBottom: '1.5em',
+          margin: '0 auto 1.5em',
           padding: '2em 1.5em',
+          maxWidth: '800px',
         }}>
 
           <div style={{ fontSize: '1.1rem', color: '#222', fontFamily: "'Mochiy Pop P One', system-ui, sans-serif", letterSpacing: '0.07em' }}>
