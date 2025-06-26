@@ -29,21 +29,21 @@ export default function RootLayout({
         <meta name="description" content="IVSサイドイベントをGoogleカレンダーにカンタン登録！" />
         <meta name="author" content="@yokoe24" />
         <meta name="theme-color" content="#192638" />
-        <link rel="icon" href="/images/square_logo_alpha.png" type="image/png" />
-        <link rel="apple-touch-icon" href="/images/square_logo_white.png" />
+        <link rel="icon" href="/images/icon256.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/images/icon1024.png" />
         <link rel="canonical" href="https://ivs2025.l-master.net" />
         {/* OGP */}
         <meta property="og:title" content="IVSサイドイベント to Googleカレンダー" />
         <meta property="og:description" content="IVSサイドイベントをGoogleカレンダーにカンタン登録！" />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://ivs2025.l-master.net" />
-        <meta property="og:image" content="/images/square_logo_white.png" />
+        <meta property="og:image" content="/images/icon1024.png" />
         <meta property="og:site_name" content="IVSサイドイベント to Googleカレンダー" />
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content="IVSサイドイベント to Googleカレンダー" />
         <meta name="twitter:description" content="IVSサイドイベントをGoogleカレンダーにカンタン登録！" />
-        <meta name="twitter:image" content="/images/square_logo_white.png" />
+        <meta name="twitter:image" content="/images/icon1024.png" />
       </head>
       <body style={{ position: 'relative' }}>
         {/* 星アニメーション背景 */}
