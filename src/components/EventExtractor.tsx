@@ -65,7 +65,6 @@ export default function EventExtractor() {
    */
   const handleReset = () => {
     setUrl('')
-    setEventInfo(null)
     setError(null)
     setLoadingState('idle')
   }
@@ -129,7 +128,7 @@ export default function EventExtractor() {
               </button>
             )}
 
-            {(eventInfo || error) && (
+            {loadingState === 'success' && (eventInfo || error) && (
               <button
                 onClick={handleReset}
                 style={{
@@ -189,7 +188,7 @@ export default function EventExtractor() {
       )}
 
       {/* イベント情報表示 */}
-      {eventInfo && loadingState === 'success' && (
+      {eventInfo && (loadingState === 'success' || loadingState === 'idle') && (
         <div style={{
           background: '#fff',
           border: '4px solid #0f0',
