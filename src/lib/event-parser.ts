@@ -106,7 +106,7 @@ function extractEventInfo($: cheerio.Root, originalUrl: string): EventInfo {
   const location = extractLocation($)
 
   // 説明を抽出
-  const description = extractDescription($)
+  const description = extractDescription($, originalUrl)
 
   return {
     title,
@@ -383,9 +383,10 @@ function extractLocation($: cheerio.Root): string {
 /**
  * イベント説明を抽出する
  * @param $ - Cheerioオブジェクト
+ * @param originalUrl - 元のイベントURL
  * @returns イベント説明
  */
-function extractDescription($: cheerio.Root): string {
+function extractDescription($: cheerio.Root, originalUrl: string): string {
   // 4s.link特有のクラス名と一般的なセレクタを試行
   const descriptionSelectors = [
     // 4s.linkのRichTextクラス（ハッシュ値に対応）
@@ -402,22 +403,22 @@ function extractDescription($: cheerio.Root): string {
     '.rich-text',
   ]
 
-  let descriptionText = ''
+  let descriptionElement: cheerio.Cheerio<any> | null = null
 
   // RichText_componentクラスから詳細情報を探す
   const richTextElement = $('[class*="RichText_component"]').first()
   if (richTextElement.length > 0) {
-    descriptionText = richTextElement.text().trim()
+    descriptionElement = richTextElement
   }
 
   // 見つからない場合は他のセレクタを試行
-  if (!descriptionText) {
+  if (!descriptionElement) {
     for (const selector of descriptionSelectors) {
       const element = $(selector).first()
       if (element.length > 0) {
         const text = element.text().trim()
         if (text && text.length > 10) {
-          descriptionText = text
+          descriptionElement = element
           break
         }
       }
@@ -425,7 +426,7 @@ function extractDescription($: cheerio.Root): string {
   }
 
   // 最後の手段として、長いテキストを含む要素を探す
-  if (!descriptionText) {
+  if (!descriptionElement) {
     $('p, div').each((index, element) => {
       const text = $(element).text().trim()
       if (
@@ -434,11 +435,53 @@ function extractDescription($: cheerio.Root): string {
         !text.includes('年') &&
         !text.includes('時')
       ) {
-        descriptionText = text
+        descriptionElement = $(element)
         return false // break
       }
     })
   }
 
-  return descriptionText || 'イベントの詳細情報'
+  if (descriptionElement) {
+    const formattedDescription = formatDescriptionHTML(descriptionElement)
+    // イベントURLを先頭に配置
+    return `詳細: ${originalUrl}\n\n${formattedDescription}`
+  }
+
+  return `詳細: ${originalUrl}\n\nイベントの詳細情報`
+}
+
+/**
+ * 説明文のHTMLを適切な形式に変換する
+ * @param element - CheerioのHTML要素
+ * @returns フォーマットされた説明文
+ */
+function formatDescriptionHTML(element: cheerio.Cheerio<any>): string {
+  // HTMLのコピーを作成して処理
+  const tempElement = element.clone()
+  
+  // <br>タグを改行文字に変換
+  tempElement.find('br').replaceWith('\n')
+  
+  // 段落ごとに処理
+  let formattedText = ''
+  tempElement.find('p').each((index, pElement) => {
+    const paragraphText = cheerio.load(pElement)('p').text().trim()
+    if (paragraphText) {
+      formattedText += paragraphText + '\n\n'
+    }
+  })
+  
+  // <p>タグが見つからない場合は、直接テキストを抽出
+  if (!formattedText.trim()) {
+    formattedText = tempElement.text().trim()
+  }
+  
+  // 余分な改行とスペースを整理
+  formattedText = formattedText
+    .replace(/\n\s*\n\s*\n+/g, '\n\n') // 3つ以上の連続改行を2つに
+    .replace(/[ \t]+/g, ' ') // 複数のスペース・タブを1つのスペースに
+    .replace(/ *\n */g, '\n') // 改行前後のスペースを削除
+    .trim()
+  
+  return formattedText || element.text().trim()
 }

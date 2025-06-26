@@ -174,14 +174,6 @@ export default function EventExtractor() {
               </div>
             </div>
 
-            {eventInfo.description && (
-              <div>
-                <p className="text-sm font-medium text-gray-600">詳細</p>
-                <p className="text-gray-900 mt-1 text-sm leading-relaxed">
-                  {eventInfo.description}
-                </p>
-              </div>
-            )}
 
             <div className="pt-4 border-t border-gray-200">
               <CalendarButton
