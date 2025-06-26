@@ -18,13 +18,13 @@ export async function parseEventFromUrl(url: string): Promise<EventInfo> {
     if (!response.ok) {
       throw new Error(`HTTPエラー: ${response.status}`)
     }
-    
+
     const html = await response.text()
     const $ = cheerio.load(html)
 
     // イベント情報を抽出
     const eventInfo = extractEventInfo($, url)
-    
+
     return eventInfo
   } catch (error) {
     console.error('イベント情報の取得に失敗しました:', error)
@@ -41,13 +41,13 @@ export async function parseEventFromUrl(url: string): Promise<EventInfo> {
 function extractEventInfo($: cheerio.Root, originalUrl: string): EventInfo {
   // タイトルを抽出
   const title = extractTitle($)
-  
+
   // 日時情報を抽出
   const { startDate, endDate } = extractDateTime($)
-  
+
   // 場所を抽出
   const location = extractLocation($)
-  
+
   // 説明を抽出
   const description = extractDescription($)
 
@@ -58,7 +58,7 @@ function extractEventInfo($: cheerio.Root, originalUrl: string): EventInfo {
     description,
     location,
     timezone: 'Asia/Tokyo',
-    originalUrl
+    originalUrl,
   }
 }
 
@@ -74,7 +74,7 @@ function extractTitle($: cheerio.Root): string {
     '.event-title',
     '[data-testid="event-title"]',
     'title',
-    '.title'
+    '.title',
   ]
 
   for (const selector of selectors) {
@@ -95,14 +95,17 @@ function extractTitle($: cheerio.Root): string {
  * @param $ - Cheerioオブジェクト
  * @returns 開始日時と終了日時
  */
-function extractDateTime($: cheerio.Root): { startDate: string; endDate: string } {
+function extractDateTime($: cheerio.Root): {
+  startDate: string
+  endDate: string
+} {
   // 日時を含む可能性のあるセレクタを試行
   const dateSelectors = [
     '.date',
     '.event-date',
     '.datetime',
     '[data-testid="event-date"]',
-    '.time'
+    '.time',
   ]
 
   let dateText = ''
@@ -132,7 +135,7 @@ function extractDateTime($: cheerio.Root): { startDate: string; endDate: string 
 
   return {
     startDate: startDate.toISOString(),
-    endDate: endDate.toISOString()
+    endDate: endDate.toISOString(),
   }
 }
 
@@ -141,7 +144,9 @@ function extractDateTime($: cheerio.Root): { startDate: string; endDate: string 
  * @param dateString - 日時文字列
  * @returns 解析された日時情報
  */
-function parseDateString(dateString: string): { startDate: string; endDate: string } | null {
+function parseDateString(
+  dateString: string
+): { startDate: string; endDate: string } | null {
   // 日本語の日時パターンを解析
   const patterns = [
     // 2025年6月27日 8:00 - 10:00
@@ -149,7 +154,7 @@ function parseDateString(dateString: string): { startDate: string; endDate: stri
     // 6月27日 8:00-10:00
     /(\d{1,2})月(\d{1,2})日\s*(\d{1,2}):(\d{2})\s*-\s*(\d{1,2}):(\d{2})/,
     // 2025-06-27 08:00-10:00
-    /(\d{4})-(\d{1,2})-(\d{1,2})\s*(\d{1,2}):(\d{2})\s*-\s*(\d{1,2}):(\d{2})/
+    /(\d{4})-(\d{1,2})-(\d{1,2})\s*(\d{1,2}):(\d{2})\s*-\s*(\d{1,2}):(\d{2})/,
   ]
 
   for (const pattern of patterns) {
@@ -159,7 +164,8 @@ function parseDateString(dateString: string): { startDate: string; endDate: stri
 
       if (match.length === 8) {
         // 年が含まれる場合
-        [, year, month, day, startHour, startMinute, endHour, endMinute] = match
+        ;[, year, month, day, startHour, startMinute, endHour, endMinute] =
+          match
       } else if (match.length === 7) {
         // 年が含まれない場合（現在年を使用）
         year = new Date().getFullYear().toString()
@@ -186,7 +192,7 @@ function parseDateString(dateString: string): { startDate: string; endDate: stri
 
       return {
         startDate: startDate.toISOString(),
-        endDate: endDate.toISOString()
+        endDate: endDate.toISOString(),
       }
     }
   }
@@ -205,7 +211,7 @@ function extractLocation($: cheerio.Root): string {
     '.venue',
     '.place',
     '[data-testid="location"]',
-    '.address'
+    '.address',
   ]
 
   for (const selector of locationSelectors) {
@@ -232,7 +238,7 @@ function extractDescription($: cheerio.Root): string {
     '.event-description',
     '.content',
     '[data-testid="description"]',
-    '.summary'
+    '.summary',
   ]
 
   for (const selector of descriptionSelectors) {

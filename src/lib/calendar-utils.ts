@@ -7,7 +7,7 @@ import { EventInfo } from '@/types/event'
  */
 export function generateGoogleCalendarUrl(event: EventInfo): string {
   const baseUrl = 'https://calendar.google.com/calendar/render'
-  
+
   // パラメータを構築
   const params = new URLSearchParams({
     action: 'TEMPLATE',
@@ -15,7 +15,7 @@ export function generateGoogleCalendarUrl(event: EventInfo): string {
     dates: formatDatesForGoogle(event.startDate, event.endDate),
     details: formatDetailsForGoogle(event),
     location: event.location,
-    ctz: event.timezone
+    ctz: event.timezone,
   })
 
   return `${baseUrl}?${params.toString()}`
@@ -30,10 +30,13 @@ export function generateGoogleCalendarUrl(event: EventInfo): string {
 function formatDatesForGoogle(startDate: string, endDate: string): string {
   const start = new Date(startDate)
   const end = new Date(endDate)
-  
+
   // UTC時刻でフォーマット（YYYYMMDDTHHmmssZ形式）
   const formatDate = (date: Date): string => {
-    return date.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '')
+    return date
+      .toISOString()
+      .replace(/[-:]/g, '')
+      .replace(/\.\d{3}/, '')
   }
 
   return `${formatDate(start)}/${formatDate(end)}`
@@ -68,9 +71,9 @@ export function formatDateForDisplay(dateString: string): string {
     day: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
-    timeZone: 'Asia/Tokyo'
+    timeZone: 'Asia/Tokyo',
   }
-  
+
   return new Intl.DateTimeFormat('ja-JP', options).format(date)
 }
 
@@ -83,28 +86,30 @@ export function formatDateForDisplay(dateString: string): string {
 export function formatEventPeriod(startDate: string, endDate: string): string {
   const start = new Date(startDate)
   const end = new Date(endDate)
-  
+
   const isSameDay = start.toDateString() === end.toDateString()
-  
+
   if (isSameDay) {
     // 同じ日の場合
     const dateOptions: Intl.DateTimeFormatOptions = {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
-      timeZone: 'Asia/Tokyo'
+      timeZone: 'Asia/Tokyo',
     }
-    
+
     const timeOptions: Intl.DateTimeFormatOptions = {
       hour: '2-digit',
       minute: '2-digit',
-      timeZone: 'Asia/Tokyo'
+      timeZone: 'Asia/Tokyo',
     }
-    
+
     const dateStr = new Intl.DateTimeFormat('ja-JP', dateOptions).format(start)
-    const startTime = new Intl.DateTimeFormat('ja-JP', timeOptions).format(start)
+    const startTime = new Intl.DateTimeFormat('ja-JP', timeOptions).format(
+      start
+    )
     const endTime = new Intl.DateTimeFormat('ja-JP', timeOptions).format(end)
-    
+
     return `${dateStr} ${startTime} - ${endTime}`
   } else {
     // 異なる日の場合

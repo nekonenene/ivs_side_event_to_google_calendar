@@ -86,10 +86,13 @@ export default function EventExtractor() {
         <h2 className="text-xl font-semibold text-gray-800 mb-4">
           イベントURL入力
         </h2>
-        
+
         <div className="space-y-4">
           <div>
-            <label htmlFor="event-url" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="event-url"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               4s.link イベントURL
             </label>
             <input
@@ -112,7 +115,7 @@ export default function EventExtractor() {
             >
               {loadingState === 'loading' ? '解析中...' : 'イベント情報を取得'}
             </button>
-            
+
             {(eventInfo || error) && (
               <button
                 onClick={handleReset}
@@ -149,7 +152,7 @@ export default function EventExtractor() {
           <h2 className="text-xl font-semibold text-gray-800 mb-4">
             イベント情報
           </h2>
-          
+
           <div className="space-y-4">
             <div>
               <h3 className="text-lg font-medium text-gray-900 mb-2">
@@ -181,8 +184,8 @@ export default function EventExtractor() {
             )}
 
             <div className="pt-4 border-t border-gray-200">
-              <CalendarButton 
-                event={eventInfo} 
+              <CalendarButton
+                event={eventInfo}
                 size="large"
                 className="w-full sm:w-auto"
               />

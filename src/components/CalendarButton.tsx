@@ -17,10 +17,10 @@ interface CalendarButtonProps {
  * @param size - ボタンのサイズ
  * @param className - カスタムクラス名
  */
-export default function CalendarButton({ 
-  event, 
-  size = 'medium', 
-  className = '' 
+export default function CalendarButton({
+  event,
+  size = 'medium',
+  className = '',
 }: CalendarButtonProps) {
   /**
    * Googleカレンダーへの追加処理

@@ -8,7 +8,9 @@ import { ParseEventResponse } from '@/types/event'
  * @param request - APIリクエスト
  * @returns イベント情報のレスポンス
  */
-export async function POST(request: NextRequest): Promise<NextResponse<ParseEventResponse>> {
+export async function POST(
+  request: NextRequest
+): Promise<NextResponse<ParseEventResponse>> {
   try {
     const body = await request.json()
     const { url } = body
@@ -33,15 +35,15 @@ export async function POST(request: NextRequest): Promise<NextResponse<ParseEven
 
     return NextResponse.json({
       success: true,
-      event: eventInfo
+      event: eventInfo,
     })
-
   } catch (error) {
     console.error('イベント解析エラー:', error)
-    
-    const errorMessage = error instanceof Error 
-      ? error.message 
-      : 'イベント情報の取得に失敗しました'
+
+    const errorMessage =
+      error instanceof Error
+        ? error.message
+        : 'イベント情報の取得に失敗しました'
 
     return NextResponse.json(
       { success: false, error: errorMessage },
@@ -55,8 +57,5 @@ export async function POST(request: NextRequest): Promise<NextResponse<ParseEven
  * @returns メソッド不許可のレスポンス
  */
 export async function GET(): Promise<NextResponse> {
-  return NextResponse.json(
-    { error: 'Method not allowed' },
-    { status: 405 }
-  )
+  return NextResponse.json({ error: 'Method not allowed' }, { status: 405 })
 }

@@ -16,7 +16,7 @@ export default function Home() {
             4s.linkのイベントURLを入力して、Googleカレンダーに簡単登録
           </p>
         </div>
-        
+
         <EventExtractor />
       </div>
     </main>
