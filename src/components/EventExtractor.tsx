@@ -80,10 +80,10 @@ export default function EventExtractor() {
   }
 
   return (
-    <div className="w-full flex justify-center" style={{ fontFamily: "'Mochiy Pop P One', system-ui, sans-serif" }}>
+    <div className="w-full block" style={{ fontFamily: "'Mochiy Pop P One', system-ui, sans-serif" }}>
       {/* URL入力フォーム */}
       <div style={{
-        marginBottom: '1.5em',
+        margin: '0 auto 1.5em',
         position: 'relative',
         maxWidth: '480px',
         width: '100%',
@@ -118,14 +118,16 @@ export default function EventExtractor() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-3">
-            <button
-              onClick={handleExtractEvent}
-              disabled={loadingState === 'loading' || !url.trim()}
-              className="tacky-btn"
-              style={{ width: '100%', flex: 1, minWidth: 0 }}
-            >
-              {loadingState === 'loading' ? '解析中...' : 'イベント情報を取得'}
-            </button>
+            {!(eventInfo && loadingState === 'success') && (
+              <button
+                onClick={handleExtractEvent}
+                disabled={loadingState === 'loading' || !url.trim()}
+                className="tacky-btn"
+                style={{ width: '100%', flex: 1, minWidth: 0 }}
+              >
+                {loadingState === 'loading' ? '解析中...' : 'イベントURLを入力する'}
+              </button>
+            )}
 
             {(eventInfo || error) && (
               <button
@@ -197,19 +199,19 @@ export default function EventExtractor() {
           padding: '2em 1.5em',
         }}>
 
-          <div style={{ fontSize: '1.1rem', color: '#222', fontFamily: "'Mochiy Pop P One', system-ui, sans-serif" }}>
+          <div style={{ fontSize: '1.1rem', color: '#222', fontFamily: "'Mochiy Pop P One', system-ui, sans-serif", letterSpacing: '0.07em' }}>
             <div style={{ marginBottom: '0.7em' }}>
               <h3 style={{ fontWeight: 700, color: '#080', textShadow: '1px 1px 0 #fff' }}>{eventInfo.title}</h3>
             </div>
 
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2em', marginBottom: '1em' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.1em', marginBottom: '1em' }}>
               <div>
-                <p style={{ fontWeight: 700, color: '#00f', marginBottom: '0.2em' }}>開催日時</p>
+                <p style={{ fontWeight: 700, color: '#00f', marginBottom: '0.1em' }}>開催日時</p>
                 <p style={{ color: '#222', fontWeight: 700 }}>{formatEventPeriod(eventInfo.startDate, eventInfo.endDate)}</p>
               </div>
 
               <div>
-                <p style={{ fontWeight: 700, color: '#00f', marginBottom: '0.2em' }}>開催場所</p>
+                <p style={{ fontWeight: 700, color: '#00f', marginBottom: '0.1em' }}>開催場所</p>
                 <p style={{ color: '#222', fontWeight: 700 }}>{eventInfo.location}</p>
               </div>
             </div>
