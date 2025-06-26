@@ -142,109 +142,67 @@ function parseDateString(
   }
 
   // 日本語の日時パターンを解析
-  const patterns = [
-    // 2025年7月2日 10:00 - 2025年7月4日 17:00
-    /(\d{4})年(\d{1,2})月(\d{1,2})日\s*(\d{1,2}):(\d{2})\s*-\s*(\d{4})年(\d{1,2})月(\d{1,2})日\s*(\d{1,2}):(\d{2})/,
-    // 2025年6月27日 16:00 - 17:00
-    /(\d{4})年(\d{1,2})月(\d{1,2})日\s*(\d{1,2}):(\d{2})\s*-\s*(\d{1,2}):(\d{2})/,
-    // 6月27日 16:00-17:00
-    /(\d{1,2})月(\d{1,2})日\s*(\d{1,2}):(\d{2})\s*-\s*(\d{1,2}):(\d{2})/,
-    // 2025年6月27日 16:00～17:00 (全角チルダ)
-    /(\d{4})年(\d{1,2})月(\d{1,2})日\s*(\d{1,2}):(\d{2})\s*～\s*(\d{1,2}):(\d{2})/,
-    // 6月27日 16:00～17:00 (全角チルダ)
-    /(\d{1,2})月(\d{1,2})日\s*(\d{1,2}):(\d{2})\s*～\s*(\d{1,2}):(\d{2})/,
-    // 2025-06-27 16:00-17:00
-    /(\d{4})-(\d{1,2})-(\d{1,2})\s*(\d{1,2}):(\d{2})\s*-\s*(\d{1,2}):(\d{2})/,
-    // 単体の日時パターン（終了時刻なし）
-    // 2025年6月27日 16:00
-    /(\d{4})年(\d{1,2})月(\d{1,2})日\s*(\d{1,2}):(\d{2})/,
-    // 6月27日 16:00
-    /(\d{1,2})月(\d{1,2})日\s*(\d{1,2}):(\d{2})/,
-  ]
+  const multiDayPattern =
+    /(\d{4})年(\d{1,2})月(\d{1,2})日\s*(\d{1,2}):(\d{2})\s*-\s*(\d{4})年(\d{1,2})月(\d{1,2})日\s*(\d{1,2}):(\d{2})/
+  const singleDayPattern =
+    /(\d{4})年(\d{1,2})月(\d{1,2})日\s*(\d{1,2}):(\d{2})\s*-\s*(\d{1,2}):(\d{2})/
 
-  for (const pattern of patterns) {
-    const match = dateString.match(pattern)
-    if (match) {
-      if (match.length === 11) {
-        // 複数日にまたがる場合: 2025年7月2日 10:00 - 2025年7月4日 17:00
-        const [
-          ,
-          startYear,
-          startMonth,
-          startDay,
-          startHour,
-          startMinute,
-          endYear,
-          endMonth,
-          endDay,
-          endHour,
-          endMinute,
-        ] = match
-        const startDate = new Date(
-          parseInt(startYear),
-          parseInt(startMonth) - 1,
-          parseInt(startDay),
-          parseInt(startHour),
-          parseInt(startMinute)
-        )
-        const endDate = new Date(
-          parseInt(endYear),
-          parseInt(endMonth) - 1,
-          parseInt(endDay),
-          parseInt(endHour),
-          parseInt(endMinute)
-        )
-        return {
-          startDate: startDate.toISOString(),
-          endDate: endDate.toISOString(),
-        }
-      }
+  const multiDayMatch = dateString.match(multiDayPattern)
+  if (multiDayMatch) {
+    const [
+      ,
+      startYear,
+      startMonth,
+      startDay,
+      startHour,
+      startMinute,
+      endYear,
+      endMonth,
+      endDay,
+      endHour,
+      endMinute,
+    ] = multiDayMatch
+    const startDate = new Date(
+      parseInt(startYear),
+      parseInt(startMonth) - 1,
+      parseInt(startDay),
+      parseInt(startHour),
+      parseInt(startMinute)
+    )
+    const endDate = new Date(
+      parseInt(endYear),
+      parseInt(endMonth) - 1,
+      parseInt(endDay),
+      parseInt(endHour),
+      parseInt(endMinute)
+    )
+    return {
+      startDate: startDate.toISOString(),
+      endDate: endDate.toISOString(),
+    }
+  }
 
-      let year, month, day, startHour, startMinute, endHour, endMinute
-
-      if (match.length === 8) {
-        // 年が含まれて時間範囲がある場合
-        ;[, year, month, day, startHour, startMinute, endHour, endMinute] =
-          match
-      } else if (match.length === 7) {
-        // 年が含まれない時間範囲がある場合
-        year = new Date().getFullYear().toString()
-        ;[, month, day, startHour, startMinute, endHour, endMinute] = match
-      } else if (match.length === 6) {
-        // 年が含まれて時間範囲がない場合
-        ;[, year, month, day, startHour, startMinute] = match
-        endHour = (parseInt(startHour) + 1).toString() // 1時間後を設定
-        endMinute = startMinute
-      } else if (match.length === 5) {
-        // 年が含まれない時間範囲がない場合
-        year = new Date().getFullYear().toString()
-        ;[, month, day, startHour, startMinute] = match
-        endHour = (parseInt(startHour) + 1).toString() // 1時間後を設定
-        endMinute = startMinute
-      } else {
-        continue
-      }
-
-      const startDate = new Date(
-        parseInt(year),
-        parseInt(month) - 1,
-        parseInt(day),
-        parseInt(startHour),
-        parseInt(startMinute)
-      )
-
-      const endDate = new Date(
-        parseInt(year),
-        parseInt(month) - 1,
-        parseInt(day),
-        parseInt(endHour),
-        parseInt(endMinute)
-      )
-
-      return {
-        startDate: startDate.toISOString(),
-        endDate: endDate.toISOString(),
-      }
+  const singleDayMatch = dateString.match(singleDayPattern)
+  if (singleDayMatch) {
+    const [, year, month, day, startHour, startMinute, endHour, endMinute] =
+      singleDayMatch
+    const startDate = new Date(
+      parseInt(year),
+      parseInt(month) - 1,
+      parseInt(day),
+      parseInt(startHour),
+      parseInt(startMinute)
+    )
+    const endDate = new Date(
+      parseInt(year),
+      parseInt(month) - 1,
+      parseInt(day),
+      parseInt(endHour),
+      parseInt(endMinute)
+    )
+    return {
+      startDate: startDate.toISOString(),
+      endDate: endDate.toISOString(),
     }
   }
 
