@@ -31,12 +31,12 @@ export default function RootLayout({
         <meta name="theme-color" content="#192638" />
         <link rel="icon" href="/images/icon256.png" type="image/png" />
         <link rel="apple-touch-icon" href="/images/icon1024.png" />
-        <link rel="canonical" href="https://ivs2025.l-master.net" />
+        <link rel="canonical" href="https://ivs-side.l-master.net" />
         {/* OGP */}
         <meta property="og:title" content="IVSサイドイベント to Googleカレンダー" />
         <meta property="og:description" content="IVSサイドイベントをGoogleカレンダーにカンタン登録！" />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://ivs2025.l-master.net" />
+        <meta property="og:url" content="https://ivs-side.l-master.net" />
         <meta property="og:image" content="/images/icon1024.png" />
         <meta property="og:site_name" content="IVSサイドイベント to Googleカレンダー" />
         {/* Twitter Card */}
