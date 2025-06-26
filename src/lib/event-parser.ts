@@ -39,22 +39,22 @@ async function fetchRenderedHTML(url: string): Promise<string> {
     headless: true,
     args: ['--no-sandbox', '--disable-setuid-sandbox']
   })
-  
+
   try {
     const page = await browser.newPage()
-    
+
     // ユーザーエージェントを設定
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36')
-    
+
     // ページに移動して、コンテンツが読み込まれるまで待機
     await page.goto(url, { waitUntil: 'networkidle0', timeout: 30000 })
-    
+
     // イベントタイトルが表示されるまで待機
     await page.waitForSelector('[class*="EventDetailOverviewScreen_title"]', { timeout: 10000 })
-    
+
     // レンダリング後のHTMLを取得
     const html = await page.content()
-    
+
     return html
   } finally {
     await browser.close()
@@ -62,32 +62,6 @@ async function fetchRenderedHTML(url: string): Promise<string> {
 }
 
 
-/**
- * HTML文字列からテキストを抽出する
- * @param html - HTML文字列
- * @returns テキスト
- */
-function extractTextFromHtml(html: string): string {
-  try {
-    // HTMLエンティティをデコード
-    const decoded = html
-      .replace(/\\u003c/g, '<')
-      .replace(/\\u003e/g, '>')
-      .replace(/\\u0026/g, '&')
-      .replace(/&lt;/g, '<')
-      .replace(/&gt;/g, '>')
-      .replace(/&amp;/g, '&')
-
-    // Cheerioでテキストを抽出
-    const $ = cheerio.load(decoded)
-    const text = $('body').text().trim() || $.root().text().trim()
-
-    // 長すぎる場合は最初の500文字に制限
-    return text.length > 500 ? text.substring(0, 500) + '...' : text
-  } catch (error) {
-    return 'イベントの詳細情報'
-  }
-}
 
 /**
  * CheerioのロードされたHTMLからイベント情報を抽出する
@@ -125,31 +99,8 @@ function extractEventInfo($: cheerio.Root, originalUrl: string): EventInfo {
  * @returns イベントタイトル
  */
 function extractTitle($: cheerio.Root): string {
-  // 4s.link特有のクラス名パターンを含むセレクタを試行
-  const selectors = [
-    // 4s.linkのタイトルクラス（ハッシュ値に対応）
-    '[class*="EventDetailOverviewScreen_title"]',
-    '[class^="EventDetailOverviewScreen_title"]',
-    // 一般的なセレクタ
-    'h1',
-    'h2',
-    '.event-title',
-    '.title',
-    '[data-testid="event-title"]',
-    'title',
-  ]
-
-  for (const selector of selectors) {
-    const element = $(selector).first()
-    if (element.length > 0) {
-      const text = element.text().trim()
-      if (text && text.length > 3) {
-        return text
-      }
-    }
-  }
-
-  return '不明なイベント'
+  const titleElement = $('[class*="EventDetailOverviewScreen_title"]').first()
+  return titleElement.length > 0 ? titleElement.text().trim() : '不明なイベント'
 }
 
 /**
@@ -161,61 +112,10 @@ function extractDateTime($: cheerio.Root): {
   startDate: string
   endDate: string
 } {
-  // 4s.link特有のクラス名と一般的なセレクタを試行
-  const dateSelectors = [
-    // 4s.linkのEventInfoItem_valueクラス（ハッシュ値に対応）
-    '[class*="EventInfoItem_value"]',
-    '[class^="EventInfoItem_value"]',
-    // 一般的なセレクタ
-    '.date',
-    '.event-date',
-    '.datetime',
-    '.time',
-    '[data-testid="event-date"]',
-    '.event-time',
-    '.schedule',
-  ]
+  // EventInfoItem_valueの最初の要素（通常は日時）
+  const dateElement = $('[class*="EventInfoItem_value"]').first()
+  const dateText = dateElement.length > 0 ? dateElement.text().trim() : ''
 
-  let dateText = ''
-
-  // EventInfoItem_valueクラスから日時情報を探す
-  $('[class*="EventInfoItem_value"]').each((index, element) => {
-    const text = $(element).text().trim()
-    // 日時パターンを含むテキストかチェック
-    if (
-      text &&
-      (text.includes('年') ||
-        text.includes('月') ||
-        text.includes('日') ||
-        text.includes(':') ||
-        text.includes('時'))
-    ) {
-      dateText = text
-      return false // break
-    }
-  })
-
-  // 見つからない場合は他のセレクタを試行
-  if (!dateText) {
-    for (const selector of dateSelectors) {
-      const element = $(selector).first()
-      if (element.length > 0) {
-        const text = element.text().trim()
-        if (
-          text &&
-          (text.includes('年') ||
-            text.includes('月') ||
-            text.includes('日') ||
-            text.includes(':'))
-        ) {
-          dateText = text
-          break
-        }
-      }
-    }
-  }
-
-  // 日時パターンを解析
   if (dateText) {
     const parsedDate = parseDateString(dateText)
     if (parsedDate) {
@@ -223,15 +123,7 @@ function extractDateTime($: cheerio.Root): {
     }
   }
 
-  // デフォルト値（現在時刻から1時間後）
-  const now = new Date()
-  const startDate = new Date(now.getTime() + 60 * 60 * 1000) // 1時間後
-  const endDate = new Date(startDate.getTime() + 2 * 60 * 60 * 1000) // 2時間後
-
-  return {
-    startDate: startDate.toISOString(),
-    endDate: endDate.toISOString(),
-  }
+  throw new Error('イベントの日時情報を取得できませんでした')
 }
 
 /**
@@ -242,7 +134,13 @@ function extractDateTime($: cheerio.Root): {
 function parseDateString(
   dateString: string
 ): { startDate: string; endDate: string } | null {
-  // 日本語の日時パターンを解析（より多様なパターンに対応）
+  // 英語の日時パターンを先にチェック
+  const englishMatch = parseEnglishDateString(dateString)
+  if (englishMatch) {
+    return englishMatch
+  }
+
+  // 日本語の日時パターンを解析
   const patterns = [
     // 2025年6月27日 16:00 - 17:00
     /(\d{4})年(\d{1,2})月(\d{1,2})日\s*(\d{1,2}):(\d{2})\s*-\s*(\d{1,2}):(\d{2})/,
@@ -316,68 +214,81 @@ function parseDateString(
 }
 
 /**
+ * 英語の日時文字列を解析する
+ * @param dateString - 日時文字列
+ * @returns 解析された日時情報
+ */
+function parseEnglishDateString(
+  dateString: string
+): { startDate: string; endDate: string } | null {
+  // 月名のマッピング
+  const monthNames = {
+    january: 1, february: 2, march: 3, april: 4, may: 5, june: 6,
+    july: 7, august: 8, september: 9, october: 10, november: 11, december: 12,
+    jan: 1, feb: 2, mar: 3, apr: 4, jun: 6, jul: 7,
+    aug: 8, sep: 9, oct: 10, nov: 11, dec: 12
+  }
+
+  // June 27, 2025 4:00 PM - 5:00 PM
+  const pattern = /(\w+)\s+(\d{1,2}),\s+(\d{4})\s+(\d{1,2}):(\d{2})\s+(AM|PM)\s*-\s*(\d{1,2}):(\d{2})\s+(AM|PM)/i
+  const match = dateString.match(pattern)
+
+  if (match) {
+    const [, monthName, day, year, startHour, startMinute, startPeriod, endHour, endMinute, endPeriod] = match
+
+    const month = monthNames[monthName.toLowerCase() as keyof typeof monthNames]
+    if (!month) return null
+
+    // 12時間制を24時間制に変換
+    let startHour24 = parseInt(startHour)
+    let endHour24 = parseInt(endHour)
+
+    if (startPeriod.toUpperCase() === 'PM' && startHour24 !== 12) {
+      startHour24 += 12
+    } else if (startPeriod.toUpperCase() === 'AM' && startHour24 === 12) {
+      startHour24 = 0
+    }
+
+    if (endPeriod.toUpperCase() === 'PM' && endHour24 !== 12) {
+      endHour24 += 12
+    } else if (endPeriod.toUpperCase() === 'AM' && endHour24 === 12) {
+      endHour24 = 0
+    }
+
+    const startDate = new Date(
+      parseInt(year),
+      month - 1,
+      parseInt(day),
+      startHour24,
+      parseInt(startMinute)
+    )
+
+    const endDate = new Date(
+      parseInt(year),
+      month - 1,
+      parseInt(day),
+      endHour24,
+      parseInt(endMinute)
+    )
+
+    return {
+      startDate: startDate.toISOString(),
+      endDate: endDate.toISOString(),
+    }
+  }
+
+  return null
+}
+
+/**
  * 開催場所を抽出する
  * @param $ - Cheerioオブジェクト
  * @returns 開催場所
  */
 function extractLocation($: cheerio.Root): string {
-  let locationText = ''
-
-  // EventInfoItem_valueクラスから場所情報を探す
-  $('[class*="EventInfoItem_value"]').each((index, element) => {
-    const text = $(element).text().trim()
-    // 場所らしいテキストかチェック（住所、建物名、地名を含む）
-    if (
-      text &&
-      (text.includes('東京') ||
-        text.includes('大阪') ||
-        text.includes('京都') ||
-        text.includes('〒') ||
-        text.includes('日本') ||
-        text.includes('羽田') ||
-        text.includes('空港') ||
-        text.includes('Zone') ||
-        text.includes('階') ||
-        text.includes('丁目') ||
-        text.includes('区') ||
-        text.includes('市') ||
-        text.includes('県') ||
-        text.includes('都') ||
-        text.includes('府') ||
-        text.includes('オンライン') ||
-        text.includes('Zoom') ||
-        text.includes('Teams'))
-    ) {
-      locationText = text
-      return false // break
-    }
-  })
-
-  // 見つからない場合は一般的なセレクタを試行
-  if (!locationText) {
-    const locationSelectors = [
-      '[class*="EventInfoItem_value"]',
-      '.location',
-      '.venue',
-      '.place',
-      '.address',
-      '[data-testid="location"]',
-      '.event-location',
-    ]
-
-    for (const selector of locationSelectors) {
-      const element = $(selector).first()
-      if (element.length > 0) {
-        const text = element.text().trim()
-        if (text && text.length > 2) {
-          locationText = text
-          break
-        }
-      }
-    }
-  }
-
-  return locationText || 'オンライン'
+  // EventInfoItem_valueの2番目の要素（通常は場所）
+  const locationElement = $('[class*="EventInfoItem_value"]').eq(1)
+  return locationElement.length > 0 ? locationElement.text().trim() : '不明'
 }
 
 /**
@@ -387,63 +298,10 @@ function extractLocation($: cheerio.Root): string {
  * @returns イベント説明
  */
 function extractDescription($: cheerio.Root, originalUrl: string): string {
-  // 4s.link特有のクラス名と一般的なセレクタを試行
-  const descriptionSelectors = [
-    // 4s.linkのRichTextクラス（ハッシュ値に対応）
-    '[class*="RichText_component"]',
-    '[class^="RichText_component"]',
-    // 一般的なセレクタ
-    '.description',
-    '.event-description',
-    '.content',
-    '.summary',
-    '.details',
-    '[data-testid="description"]',
-    '.event-content',
-    '.rich-text',
-  ]
+  const descriptionElement = $('[class*="RichText_component"]').first()
 
-  let descriptionElement: cheerio.Cheerio<any> | null = null
-
-  // RichText_componentクラスから詳細情報を探す
-  const richTextElement = $('[class*="RichText_component"]').first()
-  if (richTextElement.length > 0) {
-    descriptionElement = richTextElement
-  }
-
-  // 見つからない場合は他のセレクタを試行
-  if (!descriptionElement) {
-    for (const selector of descriptionSelectors) {
-      const element = $(selector).first()
-      if (element.length > 0) {
-        const text = element.text().trim()
-        if (text && text.length > 10) {
-          descriptionElement = element
-          break
-        }
-      }
-    }
-  }
-
-  // 最後の手段として、長いテキストを含む要素を探す
-  if (!descriptionElement) {
-    $('p, div').each((index, element) => {
-      const text = $(element).text().trim()
-      if (
-        text &&
-        text.length > 50 &&
-        !text.includes('年') &&
-        !text.includes('時')
-      ) {
-        descriptionElement = $(element)
-        return false // break
-      }
-    })
-  }
-
-  if (descriptionElement) {
+  if (descriptionElement.length > 0) {
     const formattedDescription = formatDescriptionHTML(descriptionElement)
-    // イベントURLを先頭に配置
     return `詳細: ${originalUrl}\n\n${formattedDescription}`
   }
 
@@ -458,10 +316,10 @@ function extractDescription($: cheerio.Root, originalUrl: string): string {
 function formatDescriptionHTML(element: cheerio.Cheerio<any>): string {
   // HTMLのコピーを作成して処理
   const tempElement = element.clone()
-  
+
   // <br>タグを改行文字に変換
   tempElement.find('br').replaceWith('\n')
-  
+
   // 段落ごとに処理
   let formattedText = ''
   tempElement.find('p').each((index, pElement) => {
@@ -470,18 +328,18 @@ function formatDescriptionHTML(element: cheerio.Cheerio<any>): string {
       formattedText += paragraphText + '\n\n'
     }
   })
-  
+
   // <p>タグが見つからない場合は、直接テキストを抽出
   if (!formattedText.trim()) {
     formattedText = tempElement.text().trim()
   }
-  
+
   // 余分な改行とスペースを整理
   formattedText = formattedText
     .replace(/\n\s*\n\s*\n+/g, '\n\n') // 3つ以上の連続改行を2つに
     .replace(/[ \t]+/g, ' ') // 複数のスペース・タブを1つのスペースに
     .replace(/ *\n */g, '\n') // 改行前後のスペースを削除
     .trim()
-  
+
   return formattedText || element.text().trim()
 }
