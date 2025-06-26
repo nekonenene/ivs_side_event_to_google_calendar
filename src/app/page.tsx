@@ -1,24 +1,58 @@
-import EventExtractor from '@/components/EventExtractor'
+"use client";
+import Image from "next/image";
+import { useEffect } from "react";
+import EventExtractor from "@/components/EventExtractor";
+
+const marqueeText = "IVSサイドイベントをGoogleカレンダーにカンタン登録！ 4s.linkのイベントURLを貼るだけ！！";
 
 /**
  * メインページコンポーネント
  * イベントURL入力とGoogleカレンダー登録機能を提供する
  */
 export default function Home() {
-  return (
-    <main className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
-      <div className="container mx-auto">
-        <div className="text-center mb-8">
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-            IVSサイドイベント to Googleカレンダー
-          </h1>
-          <p className="text-gray-600 text-sm sm:text-base">
-            4s.linkのイベントURLを入力して、Googleカレンダーに簡単登録
-          </p>
-        </div>
+  // 星アニメーション生成
+  useEffect(() => {
+    const starryBg = document.getElementById("starry-bg");
+    if (!starryBg) return;
+    starryBg.innerHTML = "";
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    for (let i = 0; i < 120; i++) {
+      const star = document.createElement("div");
+      star.className = "star";
+      const size = Math.random() * 2 + 1;
+      star.style.width = `${size}px`;
+      star.style.height = `${size}px`;
+      star.style.left = `${Math.random() * w}px`;
+      star.style.top = `${Math.random() * h}px`;
+      star.style.animationDelay = `${Math.random() * 2}s`;
+      starryBg.appendChild(star);
+    }
+  }, []);
 
-        <EventExtractor />
+  return (
+    <main className="app-bg font-mochiy" style={{ minHeight: "100vh", textAlign: "center", paddingTop: "40px" }}>
+      {/* お知らせスクロールボックス */}
+      <div className="marquee-box">
+        <span className="marquee-content">
+          {marqueeText}
+          <span aria-hidden="true">{marqueeText}</span>
+        </span>
       </div>
+
+      {/* 虹色タイトル */}
+      <h1 className="rainbow-text" style={{ fontSize: "2.5rem", margin: "0.5em 0" }}>
+        IVSサイドイベント to Googleカレンダー
+      </h1>
+      <div style={{ color: "#ff0", fontSize: "1.1rem", marginBottom: "1em", textShadow: "2px 2px 0 #000, 0 0 8px #0ff", fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Meiryo', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif", fontWeight: 700 }}>
+        4s.linkのイベントURLを入力して、Googleカレンダーに一発登録！
+      </div>
+      <div style={{ color: "#fff", fontSize: "1.1rem", maxWidth: 600, margin: "0 auto 2em", textShadow: "1px 1px 0 #000", fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Meiryo', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif", fontWeight: 700 }}>
+        URLを貼るだけで、IVSサイドイベントの予定をGoogleカレンダーに追加できます。<br />
+        参加したいイベントを見逃さず、スケジュール管理もラクラク！
+      </div>
+      <hr />
+      <EventExtractor />
     </main>
-  )
+  );
 }

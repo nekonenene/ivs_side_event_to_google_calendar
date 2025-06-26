@@ -80,21 +80,21 @@ export default function EventExtractor() {
   }
 
   return (
-    <div className="w-full max-w-2xl mx-auto">
+    <div className="w-full flex justify-center" style={{ fontFamily: "'Mochiy Pop P One', system-ui, sans-serif" }}>
       {/* URL入力フォーム */}
-      <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">
-          イベントURL入力
+      <div style={{
+        marginBottom: '1.5em',
+        position: 'relative',
+        maxWidth: '480px',
+        width: '100%',
+        minWidth: 0,
+      }}>
+        <h2 style={{ fontSize: '1.6rem', marginBottom: '1em' }}>
+        4s.link  イベントURL入力
         </h2>
 
         <div className="space-y-4">
           <div>
-            <label
-              htmlFor="event-url"
-              className="block text-sm font-medium text-gray-700 mb-2"
-            >
-              4s.link イベントURL
-            </label>
             <input
               id="event-url"
               type="url"
@@ -102,7 +102,20 @@ export default function EventExtractor() {
               onChange={(e) => setUrl(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="https://4s.link/ja/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-sm sm:text-base"
+              style={{
+                width: '100%',
+                padding: '1em',
+                border: '3px solid #0ff',
+                borderRadius: '12px',
+                fontSize: '1.1rem',
+                fontFamily: "'Mochiy Pop P One', system-ui, sans-serif",
+                background: '#f0f8ff',
+                color: '#222',
+                boxShadow: '0 2px 0 #00f',
+                outline: 'none',
+                marginBottom: '0.5em',
+                boxSizing: 'border-box',
+              }}
               disabled={loadingState === 'loading'}
             />
           </div>
@@ -111,7 +124,8 @@ export default function EventExtractor() {
             <button
               onClick={handleExtractEvent}
               disabled={loadingState === 'loading' || !url.trim()}
-              className="flex-1 px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              className="tacky-btn"
+              style={{ width: '100%', flex: 1, minWidth: 0 }}
             >
               {loadingState === 'loading' ? '解析中...' : 'イベント情報を取得'}
             </button>
@@ -119,7 +133,22 @@ export default function EventExtractor() {
             {(eventInfo || error) && (
               <button
                 onClick={handleReset}
-                className="px-6 py-3 bg-gray-500 hover:bg-gray-600 text-white font-semibold rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                style={{
+                  padding: '0.9em 2em',
+                  background: 'linear-gradient(180deg, #eee 0%, #b0e0ff 100%)',
+                  border: '3px solid #00c0ff',
+                  color: '#222',
+                  fontSize: '1.1rem',
+                  borderRadius: '16px',
+                  boxShadow: '0 4px 0 #0088cc, 0 0 8px #00c0ff',
+                  textShadow: '1px 1px 0 #fff, 2px 2px 0 #00c0ff',
+                  margin: '0.5em 0',
+                  cursor: 'pointer',
+                  fontFamily: "'Mochiy Pop P One', system-ui, sans-serif",
+                  fontWeight: 700,
+                  width: '100%',
+                  minWidth: 0,
+                }}
               >
                 リセット
               </button>
@@ -130,51 +159,65 @@ export default function EventExtractor() {
 
       {/* ローディング表示 */}
       {loadingState === 'loading' && (
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
+        <div style={{
+          background: '#fff',
+          border: '4px solid #0ff',
+          borderRadius: '18px',
+          boxShadow: '0 0 16px #0ff, 0 0 4px #00f',
+          marginBottom: '1.5em',
+          padding: '2em 1.5em',
+          textAlign: 'center',
+        }}>
           <LoadingSpinner />
         </div>
       )}
 
       {/* エラー表示 */}
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-          <div className="flex items-center">
-            <div className="text-red-600 mr-2">⚠️</div>
-            <div className="text-red-800 font-medium">エラー</div>
+        <div style={{
+          background: '#fff0f0',
+          border: '4px solid #f00',
+          borderRadius: '18px',
+          boxShadow: '0 0 12px #f00',
+          marginBottom: '1.5em',
+          padding: '1.5em',
+        }}>
+          <div style={{ color: '#f00', fontWeight: 700, fontSize: '1.2rem', marginBottom: '0.5em', textShadow: '1px 1px 0 #fff' }}>
+            ⚠️ エラー
           </div>
-          <p className="text-red-700 mt-1">{error}</p>
+          <p style={{ color: '#a00', fontWeight: 700 }}>{error}</p>
         </div>
       )}
 
       {/* イベント情報表示 */}
       {eventInfo && loadingState === 'success' && (
-        <div className="bg-white rounded-lg shadow-lg p-6">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">
-            イベント情報
-          </h2>
+        <div style={{
+          background: '#fff',
+          border: '4px solid #0f0',
+          borderRadius: '18px',
+          boxShadow: '0 0 16px #0f0, 0 0 4px #080',
+          marginBottom: '1.5em',
+          padding: '2em 1.5em',
+        }}>
 
-          <div className="space-y-4">
-            <div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
-                {eventInfo.title}
-              </h3>
+          <div style={{ fontSize: '1.1rem', color: '#222', fontFamily: "'Mochiy Pop P One', system-ui, sans-serif" }}>
+            <div style={{ marginBottom: '0.7em' }}>
+              <h3 style={{ fontWeight: 700, color: '#080', textShadow: '1px 1px 0 #fff' }}>{eventInfo.title}</h3>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2em', marginBottom: '1em' }}>
               <div>
-                <p className="text-sm font-medium text-gray-600">開催日時</p>
-                <p className="text-gray-900 mt-1">
-                  {formatEventPeriod(eventInfo.startDate, eventInfo.endDate)}
-                </p>
+                <p style={{ fontWeight: 700, color: '#00f', marginBottom: '0.2em' }}>開催日時</p>
+                <p style={{ color: '#222', fontWeight: 700 }}>{formatEventPeriod(eventInfo.startDate, eventInfo.endDate)}</p>
               </div>
 
               <div>
-                <p className="text-sm font-medium text-gray-600">開催場所</p>
-                <p className="text-gray-900 mt-1">{eventInfo.location}</p>
+                <p style={{ fontWeight: 700, color: '#00f', marginBottom: '0.2em' }}>開催場所</p>
+                <p style={{ color: '#222', fontWeight: 700 }}>{eventInfo.location}</p>
               </div>
             </div>
 
-            <div className="pt-4 border-t border-gray-200">
+            <div style={{ paddingTop: '1em', borderTop: '2px dashed #0f0', marginTop: '1em' }}>
               <CalendarButton
                 event={eventInfo}
                 size="large"

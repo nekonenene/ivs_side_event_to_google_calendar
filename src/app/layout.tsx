@@ -16,12 +16,19 @@ export const metadata: Metadata = {
  */
 export default function RootLayout({
   children,
-}: {
-  children: React.ReactNode
-}) {
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
     <html lang="ja">
-      <body className={inter.className}>{children}</body>
+      <head>
+        <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+P+One&display=swap" rel="stylesheet" />
+      </head>
+      <body>
+        {/* 星アニメーション背景 */}
+        <div className="starry-bg" id="starry-bg"></div>
+        {children}
+      </body>
     </html>
   )
 }
