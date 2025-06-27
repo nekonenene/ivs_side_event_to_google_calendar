@@ -79,16 +79,21 @@ export default function EventExtractor() {
   }
 
   return (
-    <div className="w-full block" style={{ fontFamily: "'Mochiy Pop P One', system-ui, sans-serif" }}>
+    <div
+      className="w-full block"
+      style={{ fontFamily: "'Mochiy Pop P One', system-ui, sans-serif" }}
+    >
       {/* URL入力フォーム */}
-      <div style={{
-        margin: '0 auto 1.5em',
-        position: 'relative',
-        maxWidth: '480px',
-        width: '100%',
-        minWidth: 0,
-      }}>
-        <h2>4s.link  イベントURL入力</h2>
+      <div
+        style={{
+          margin: '0 auto 1.5em',
+          position: 'relative',
+          maxWidth: '480px',
+          width: '100%',
+          minWidth: 0,
+        }}
+      >
+        <h2>4s.link イベントURL入力</h2>
         <div className="space-y-4">
           <div>
             <input
@@ -124,7 +129,9 @@ export default function EventExtractor() {
                 className="tacky-btn"
                 style={{ width: '100%', flex: 1, minWidth: 0 }}
               >
-                {loadingState === 'loading' ? '解析中...' : 'イベント情報を取得する'}
+                {loadingState === 'loading'
+                  ? '解析中...'
+                  : 'イベント情報を取得する'}
               </button>
             )}
 
@@ -157,31 +164,43 @@ export default function EventExtractor() {
 
       {/* ローディング表示 */}
       {loadingState === 'loading' && (
-        <div style={{
-          background: '#fff',
-          border: '4px solid #0ff',
-          borderRadius: '18px',
-          boxShadow: '0 0 16px #0ff, 0 0 4px #00f',
-          margin: '0 auto 1.5em',
-          padding: '2em 1.5em',
-          maxWidth: '800px',
-          textAlign: 'center',
-        }}>
+        <div
+          style={{
+            background: '#fff',
+            border: '4px solid #0ff',
+            borderRadius: '18px',
+            boxShadow: '0 0 16px #0ff, 0 0 4px #00f',
+            margin: '0 auto 1.5em',
+            padding: '2em 1.5em',
+            maxWidth: '800px',
+            textAlign: 'center',
+          }}
+        >
           <LoadingSpinner />
         </div>
       )}
 
       {/* エラー表示 */}
       {error && (
-        <div style={{
-          background: '#fff0f0',
-          border: '4px solid #f00',
-          borderRadius: '18px',
-          boxShadow: '0 0 12px #f00',
-          marginBottom: '1.5em',
-          padding: '1.5em',
-        }}>
-          <div style={{ color: '#f00', fontWeight: 700, fontSize: '1.2rem', marginBottom: '0.5em', textShadow: '1px 1px 0 #fff' }}>
+        <div
+          style={{
+            background: '#fff0f0',
+            border: '4px solid #f00',
+            borderRadius: '18px',
+            boxShadow: '0 0 12px #f00',
+            marginBottom: '1.5em',
+            padding: '1.5em',
+          }}
+        >
+          <div
+            style={{
+              color: '#f00',
+              fontWeight: 700,
+              fontSize: '1.2rem',
+              marginBottom: '0.5em',
+              textShadow: '1px 1px 0 #fff',
+            }}
+          >
             ⚠️ エラー
           </div>
           <p style={{ color: '#a00', fontWeight: 700 }}>{error}</p>
@@ -190,34 +209,83 @@ export default function EventExtractor() {
 
       {/* イベント情報表示 */}
       {eventInfo && (loadingState === 'success' || loadingState === 'idle') && (
-        <div style={{
-          background: '#fff',
-          border: '4px solid #0f0',
-          borderRadius: '18px',
-          boxShadow: '0 0 16px #0f0, 0 0 4px #080',
-          margin: '0 auto 1.5em',
-          padding: '2em 1.5em',
-          maxWidth: '800px',
-        }}>
-
-          <div style={{ fontSize: '1.1rem', color: '#222', fontFamily: "'Mochiy Pop P One', system-ui, sans-serif", letterSpacing: '0.07em' }}>
+        <div
+          style={{
+            background: '#fff',
+            border: '4px solid #0f0',
+            borderRadius: '18px',
+            boxShadow: '0 0 16px #0f0, 0 0 4px #080',
+            margin: '0 auto 1.5em',
+            padding: '2em 1.5em',
+            maxWidth: '800px',
+          }}
+        >
+          <div
+            style={{
+              fontSize: '1.1rem',
+              color: '#222',
+              fontFamily: "'Mochiy Pop P One', system-ui, sans-serif",
+              letterSpacing: '0.07em',
+            }}
+          >
             <div style={{ marginBottom: '0.7em' }}>
-              <h3 style={{ fontWeight: 700, color: '#080', textShadow: '1px 1px 0 #fff' }}>{eventInfo.title}</h3>
+              <h3
+                style={{
+                  fontWeight: 700,
+                  color: '#080',
+                  textShadow: '1px 1px 0 #fff',
+                }}
+              >
+                {eventInfo.title}
+              </h3>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.1em', marginBottom: '1em' }}>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.1em',
+                marginBottom: '1em',
+              }}
+            >
               <div>
-                <p style={{ fontWeight: 700, color: '#00f', marginBottom: '0.1em' }}>開催日時</p>
-                <p style={{ color: '#222', fontWeight: 700 }}>{formatEventPeriod(eventInfo.startDate, eventInfo.endDate)}</p>
+                <p
+                  style={{
+                    fontWeight: 700,
+                    color: '#00f',
+                    marginBottom: '0.1em',
+                  }}
+                >
+                  開催日時
+                </p>
+                <p style={{ color: '#222', fontWeight: 700 }}>
+                  {formatEventPeriod(eventInfo.startDate, eventInfo.endDate)}
+                </p>
               </div>
 
               <div>
-                <p style={{ fontWeight: 700, color: '#00f', marginBottom: '0.1em' }}>開催場所</p>
-                <p style={{ color: '#222', fontWeight: 700 }}>{eventInfo.location}</p>
+                <p
+                  style={{
+                    fontWeight: 700,
+                    color: '#00f',
+                    marginBottom: '0.1em',
+                  }}
+                >
+                  開催場所
+                </p>
+                <p style={{ color: '#222', fontWeight: 700 }}>
+                  {eventInfo.location}
+                </p>
               </div>
             </div>
 
-            <div style={{ paddingTop: '1em', borderTop: '2px dashed #0f0', marginTop: '1em' }}>
+            <div
+              style={{
+                paddingTop: '1em',
+                borderTop: '2px dashed #0f0',
+                marginTop: '1em',
+              }}
+            >
               <CalendarButton
                 event={eventInfo}
                 size="large"

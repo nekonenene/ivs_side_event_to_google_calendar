@@ -1,5 +1,6 @@
 import * as cheerio from 'cheerio'
 import puppeteer from 'puppeteer'
+import { Element } from 'domhandler'
 import { EventInfo } from '@/types/event'
 
 /**
@@ -70,7 +71,10 @@ async function fetchRenderedHTML(url: string): Promise<string> {
  * @param originalUrl - 元のURL
  * @returns イベント情報
  */
-function extractEventInfo($: cheerio.Root, originalUrl: string): EventInfo {
+function extractEventInfo(
+  $: cheerio.CheerioAPI,
+  originalUrl: string
+): EventInfo {
   // タイトルを抽出
   const title = extractTitle($)
 
@@ -99,7 +103,7 @@ function extractEventInfo($: cheerio.Root, originalUrl: string): EventInfo {
  * @param $ - Cheerioオブジェクト
  * @returns イベントタイトル
  */
-function extractTitle($: cheerio.Root): string {
+function extractTitle($: cheerio.CheerioAPI): string {
   const titleElement = $('[class*="EventDetailOverviewScreen_title"]').first()
   return titleElement.length > 0 ? titleElement.text().trim() : '不明なイベント'
 }
@@ -109,7 +113,7 @@ function extractTitle($: cheerio.Root): string {
  * @param $ - Cheerioオブジェクト
  * @returns 開始日時と終了日時
  */
-function extractDateTime($: cheerio.Root): {
+function extractDateTime($: cheerio.CheerioAPI): {
   startDate: string
   endDate: string
 } {
@@ -371,7 +375,7 @@ function parseEnglishDateString(
  * @param $ - Cheerioオブジェクト
  * @returns 開催場所
  */
-function extractLocation($: cheerio.Root): string {
+function extractLocation($: cheerio.CheerioAPI): string {
   // EventInfoItem_valueの2番目の要素（通常は場所）
   const locationElement = $('[class*="EventInfoItem_value"]').eq(1)
   return locationElement.length > 0 ? locationElement.text().trim() : '不明'
@@ -383,7 +387,10 @@ function extractLocation($: cheerio.Root): string {
  * @param originalUrl - 元のイベントURL
  * @returns イベント説明
  */
-function extractDescription($: cheerio.Root, originalUrl: string): string {
+function extractDescription(
+  $: cheerio.CheerioAPI,
+  originalUrl: string
+): string {
   const descriptionElement = $('[class*="RichText_component"]').first()
 
   if (descriptionElement.length > 0) {
@@ -399,7 +406,7 @@ function extractDescription($: cheerio.Root, originalUrl: string): string {
  * @param element - CheerioのHTML要素
  * @returns フォーマットされた説明文
  */
-function formatDescriptionHTML(element: cheerio.Cheerio): string {
+function formatDescriptionHTML(element: cheerio.Cheerio<Element>): string {
   // HTMLのコピーを作成して処理
   const tempElement = element.clone()
 
@@ -408,7 +415,7 @@ function formatDescriptionHTML(element: cheerio.Cheerio): string {
 
   // 段落ごとに処理
   let formattedText = ''
-  tempElement.find('p').each((index: number, pElement: cheerio.Element) => {
+  tempElement.find('p').each((index: number, pElement: Element) => {
     const paragraphText = cheerio.load(pElement)('p').text().trim()
     if (paragraphText) {
       formattedText += paragraphText + '\n\n'
