@@ -5,8 +5,8 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'IVS Side Event to Google Calendar',
-  description: 'IVSサイドイベントをGoogleカレンダーに簡単登録',
+  title: 'IVSサイドイベント to Googleカレンダー',
+  description: 'IVSサイドイベントをGoogleカレンダーにカンタン登録！',
 }
 
 /**
