@@ -52,8 +52,8 @@ export default function CalendarButton({
       >
         📅 Googleカレンダーに登録
       </button>
-      <p className="text-xs mt-2 text-center">
-        ※Googleに未ログインの方は、先に
+      <p className="text-[0.85rem] mt-2 text-center">
+        ※Googleにログインしていない方は、先に
         <a
           href="https://calendar.google.com/calendar"
           target="_blank"
