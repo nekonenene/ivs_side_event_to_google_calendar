@@ -121,7 +121,7 @@ export default function Home() {
         サイドイベント一覧はこちら
       </a>
       <a
-        href="https://4s.link/ja/explore"
+        href="https://www.ivs.events/ja"
         target="_blank"
         rel="noopener noreferrer"
         className="tacky-btn"
