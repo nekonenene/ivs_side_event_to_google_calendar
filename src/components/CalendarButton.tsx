@@ -43,13 +43,27 @@ export default function CalendarButton({
   }
 
   return (
-    <button
-      onClick={handleAddToCalendar}
-      className="win98-btn"
-      type="button"
-      style={{ width: '100%', zIndex: 1000 }}
-    >
-      📅 Googleカレンダーに登録
-    </button>
+    <div>
+      <button
+        onClick={handleAddToCalendar}
+        className="win98-btn"
+        type="button"
+        style={{ width: '100%', zIndex: 1000 }}
+      >
+        📅 Googleカレンダーに登録
+      </button>
+      <p className="text-xs mt-2 text-center">
+        ※Googleに未ログインの方は、先に
+        <a
+          href="https://calendar.google.com/calendar"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-600 hover:text-blue-800 underline"
+        >
+          ログイン
+        </a>
+        してください
+      </p>
+    </div>
   )
 }
