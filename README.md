@@ -16,11 +16,23 @@ Googleカレンダーにかんたんに予定を追加できる Next.js 製の�
    ```bash
    npm install
    ```
-2. 開発サーバーを起動:
+
+2. 環境変数を設定（オプション）:
+   ```bash
+   cp .env.example .env.local
+   ```
+   `.env.local` ファイルで Google Analytics ID を設定:
+   ```
+   NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
+   ```
+   ※ この設定は任意です。設定しない場合は Google Analytics による計測はおこなわれません。
+
+3. 開発サーバーを起動:
    ```bash
    npm run dev
    ```
-3. ブラウザで `http://localhost:3000` を開く
+
+4. ブラウザで `http://localhost:3000` を開く
 
 ## スクリプト
 
