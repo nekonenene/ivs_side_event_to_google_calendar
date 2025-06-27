@@ -70,6 +70,17 @@ export default function EventExtractor() {
   }
 
   /**
+   * URL入力フィールドの変更処理
+   * success状態の場合はidleに戻す
+   */
+  const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUrl(e.target.value)
+    if (loadingState === 'success') {
+      setLoadingState('idle')
+    }
+  }
+
+  /**
    * Enter キー押下でフォーム送信
    */
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -100,7 +111,7 @@ export default function EventExtractor() {
               id="event-url"
               type="url"
               value={url}
-              onChange={(e) => setUrl(e.target.value)}
+              onChange={handleUrlChange}
               onKeyPress={handleKeyPress}
               placeholder="https://4s.link/ja/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
               style={{
