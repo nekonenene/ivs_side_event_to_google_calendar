@@ -66,6 +66,63 @@ export default function RootLayout({
           content="IVSサイドイベントをGoogleカレンダーにカンタン登録！"
         />
         <meta name="twitter:image" content="/images/icon1024.png" />
+        {/* 構造化データ (JSON-LD) */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify([
+              {
+                '@context': 'https://schema.org',
+                '@type': 'WebSite',
+                name: 'IVSサイドイベント to Googleカレンダー',
+                description:
+                  'IVSサイドイベントをGoogleカレンダーにカンタン登録！4s.linkのイベントURLを貼るだけでイベント情報を抽出し、Googleカレンダーに登録できます。',
+                url: 'https://ivs-side.l-master.net',
+                inLanguage: 'ja-JP',
+                author: {
+                  '@type': 'Person',
+                  name: '@yokoe24',
+                  url: 'https://x.com/yokoe24',
+                },
+                potentialAction: {
+                  '@type': 'SearchAction',
+                  target: {
+                    '@type': 'EntryPoint',
+                    urlTemplate: 'https://ivs-side.l-master.net',
+                  },
+                  'query-input': 'required name=search_term_string',
+                },
+              },
+              {
+                '@context': 'https://schema.org',
+                '@type': 'WebApplication',
+                name: 'IVSサイドイベント to Googleカレンダー',
+                description:
+                  'IVSサイドイベントをGoogleカレンダーにカンタン登録！4s.linkのイベントURLを貼るだけでイベント情報を抽出し、Googleカレンダーに登録できます。',
+                url: 'https://ivs-side.l-master.net',
+                applicationCategory: 'ProductivityApplication',
+                operatingSystem: 'Web',
+                browserRequirements: 'Requires JavaScript',
+                author: {
+                  '@type': 'Person',
+                  name: '@yokoe24',
+                  url: 'https://x.com/yokoe24',
+                },
+                offers: {
+                  '@type': 'Offer',
+                  price: '0',
+                  priceCurrency: 'JPY',
+                },
+                featureList: [
+                  '4s.linkのイベントURL解析',
+                  'Googleカレンダー登録機能',
+                  'レスポンシブデザイン',
+                  'リアルタイム情報抽出',
+                ],
+              },
+            ]),
+          }}
+        />
       </head>
       <body style={{ position: 'relative' }}>
         {/* 星アニメーション背景 */}
