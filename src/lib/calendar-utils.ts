@@ -131,7 +131,7 @@ export function isValid4sLinkUrl(url: string): boolean {
 
   try {
     const urlObj = new URL(url)
-    return urlObj.hostname.includes('4s.link')
+    return urlObj.hostname === '4s.link' || urlObj.hostname.endsWith('.4s.link')
   } catch {
     return false
   }

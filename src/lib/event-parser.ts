@@ -10,7 +10,17 @@ import { EventInfo } from '@/types/event'
  */
 export async function parseEventFromUrl(url: string): Promise<EventInfo> {
   // URLのバリデーション
-  if (!url || !url.includes('4s.link')) {
+  let parsedUrl: URL
+  try {
+    parsedUrl = new URL(url)
+  } catch {
+    throw new Error('有効なURLを入力してください')
+  }
+
+  if (
+    parsedUrl.hostname !== '4s.link' &&
+    !parsedUrl.hostname.endsWith('.4s.link')
+  ) {
     throw new Error('有効な4s.linkのURLを入力してください')
   }
 
@@ -37,7 +47,7 @@ export async function parseEventFromUrl(url: string): Promise<EventInfo> {
 async function fetchRenderedHTML(url: string): Promise<string> {
   const browser = await puppeteer.launch({
     headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    args: ['--disable-dev-shm-usage'],
   })
 
   try {
