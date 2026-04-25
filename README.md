@@ -1,6 +1,6 @@
 # IVSサイドイベント to Googleカレンダー
 
-4s.link のイベントページ（[https://4s.link/ja/explore](https://4s.link/ja/explore)）からイベント情報を抽出し、  
+4s.link のイベントページ（[https://4s.link/ja/events](https://4s.link/ja/events)）からイベント情報を抽出し、  
 Googleカレンダーにかんたんに予定を追加できる Next.js 製のアプリケーションです。
 
 ## 技術スタック
