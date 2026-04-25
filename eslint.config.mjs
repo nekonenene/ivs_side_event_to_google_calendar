@@ -1,5 +1,5 @@
-import nextConfig from 'eslint-config-next/core-web-vitals'
-import prettierPluginRecommended from 'eslint-plugin-prettier/recommended'
+import nextConfig from 'eslint-config-next/core-web-vitals';
+import prettierPluginRecommended from 'eslint-plugin-prettier/recommended';
 
 export default [
   ...nextConfig,
@@ -10,4 +10,4 @@ export default [
       'eol-last': ['error', 'always'],
     },
   },
-]
+];

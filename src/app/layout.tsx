@@ -1,11 +1,11 @@
-import type { Metadata } from 'next'
-import { GoogleAnalytics } from '@next/third-parties/google'
-import './globals.css'
+import type { Metadata } from 'next';
+import { GoogleAnalytics } from '@next/third-parties/google';
+import './globals.css';
 
 export const metadata: Metadata = {
   title: 'IVSサイドイベント to Googleカレンダー',
   description: 'IVSサイドイベントをGoogleカレンダーにカンタン登録！',
-}
+};
 
 /**
  * ルートレイアウトコンポーネント
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }>) {
   return (
     <html lang="ja">
@@ -126,5 +126,5 @@ export default function RootLayout({
         )}
       </body>
     </html>
-  )
+  );
 }

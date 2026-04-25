@@ -43,5 +43,5 @@ export default function EventExtractor() {
         </p>
       </div>
     </div>
-  )
+  );
 }
