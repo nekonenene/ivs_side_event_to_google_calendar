@@ -1,9 +1,6 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
 import { GoogleAnalytics } from '@next/third-parties/google'
 import './globals.css'
-
-const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'IVSサイドイベント to Googleカレンダー',
@@ -23,10 +20,6 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <head>
-        <link
-          href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+P+One&display=swap"
-          rel="stylesheet"
-        />
         {/* SEO & OGP meta tags */}
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
