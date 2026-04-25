@@ -105,7 +105,7 @@ export default function Home() {
       <EventExtractor />
       <hr />
       <a
-        href="https://4s.link/ja/explore"
+        href="https://www.ivs.events/"
         target="_blank"
         rel="noopener noreferrer"
         className="tacky-btn"
@@ -118,23 +118,7 @@ export default function Home() {
           margin: '2em auto',
         }}
       >
-        サイドイベント一覧はこちら
-      </a>
-      <a
-        href="https://www.ivs.events/ja"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="tacky-btn"
-        style={{
-          display: 'block',
-          width: '100%',
-          maxWidth: '320px',
-          minWidth: 0,
-          textDecoration: 'none',
-          margin: '2em auto',
-        }}
-      >
-        IVS2025公式はこちら
+        IVS公式はこちら
       </a>
       <a
         href="https://x.com/yokoe24"

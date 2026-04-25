@@ -104,7 +104,30 @@ export default function EventExtractor() {
           minWidth: 0,
         }}
       >
-        <h2>4s.link イベントURL入力</h2>
+        <h2>IVS2025 が終了したためこのサイトは終了しました m(_ _)m</h2>
+        <p
+          style={{
+            color: '#fff',
+            fontSize: '1rem',
+            fontStyle: 'italic',
+            lineHeight: 1.8,
+            marginBottom: '1em',
+            textShadow: '1px 1px 0 #000',
+          }}
+        >
+          現在の{' '}
+          <a
+            href="https://4s.link/"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: '#0f0', textDecoration: 'none' }}
+          >
+            4s.link
+          </a>{' '}
+          は「カレンダーに登録」ボタンから
+          <br/>
+          Googleカレンダーへの登録ができるようになりました!!
+        </p>
         <div className="space-y-4">
           <div>
             <input
