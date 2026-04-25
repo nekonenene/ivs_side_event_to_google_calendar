@@ -134,7 +134,11 @@ export default function Home() {
           margin: '2em auto',
         }}
       >
-        製作者の<ruby>X<rt>エックス</rt></ruby>アカウント
+        製作者の
+        <ruby>
+          X<rt>エックス</rt>
+        </ruby>
+        アカウント
       </a>
     </main>
   );
